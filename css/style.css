@@ -1,0 +1,278 @@
+body
+{
+	font-family:		Arial,Tahoma;
+	background-color:	#f1f5fb;
+	margin:				0;
+	padding:			0;
+}
+
+#menu_container
+{
+	background-color:	#263957;
+	height:				35px;
+	border-bottom:		1px solid black;
+	color:				#fff;
+	font-size:			small;
+	vertical-align:		middle;
+}
+#menu_container	a
+{
+	text-decoration:	none;
+	color:				#fff;
+}
+#menu_container	a:hover
+{
+	text-decoration:	underline;
+	color:				#fff;
+}
+#menu_logo
+{
+	float:				left;
+}
+#menu
+{
+	text-align:			right;
+	vertical-align:		middle;
+}
+
+/* ----------------------------- */
+#fp_container
+{
+	background-color: 	#fff;
+	width:				750px;
+	border:				1px solid #A5BEE4;
+	overflow:			hidden;
+	padding:			5px;
+	margin:				auto;
+}
+
+#fp_top
+{
+	float:				top;
+	text-align:			center;
+	font-family:		Verdana,Tahoma,Arial;
+}
+
+#fp1
+{
+	width:				400px;
+	padding-right:		10px;
+	float:				left;
+}
+
+#fp2
+{
+	width:				300px;	
+	padding-left:		10px;
+	float:				left;
+	border-left:		2px solid #A5BEE4;
+}
+
+
+#fp_cp
+{
+	width:				600px;
+	margin:				auto;
+	font-family:		Arial Narrow;
+	font-size:			12pt;
+	overflow:			hidden;
+	padding-top:		20px;
+}
+#fp_c2_lt
+{
+	float:				left;
+	width:				290px;
+}
+
+/* ----------------------------- */
+#signup_button
+{
+	background-color:	#C83A2A;
+	border:				1px solid #B0281A;
+	width:				150px;
+	height:				35px;
+	text-align:			center;
+}
+#signup_button	a
+{
+	text-decoration:	none;
+	line-height:		35px;
+	vertical-align:		middle;
+	color:				#fff;
+	font-family:		Arial Narrow;
+	font-size:			10pt;
+	font-weight:		bold;
+}
+#signup_button:hover
+{
+	background-color:	#DC4B39;
+	border:				1px solid #B0281A;
+}
+
+/* ----------------------------- */
+#post_container
+{
+	overflow:			hidden;
+	width:				800px;
+	margin:				auto;
+}
+
+/* ----------------------------- */
+#article_container
+{
+	width:				505px;
+	float:				left;
+}
+.article_one
+{
+	background-color: 	#fff;
+	width:				500px;
+	border:				1px solid #A5BEE4;
+	overflow:			hidden;
+	float:				left;
+}
+.article_content
+{
+	padding:			5px;
+	word-wrap:			break-word;
+}
+.article_poster
+{
+	font-style:		italic;
+	font-size:		small;
+	text-align:		right;
+	color:			#999;
+	padding-right:	5px;
+}
+
+/* ----------------------------- */
+#post_add
+{
+	width:				505px;
+	float:				left;
+}
+
+/* ----------------------------- */
+#post_menu
+{
+	background-color: 	#EBF2F2;
+	width:				180px;
+	margin-left:		10px;
+	float:				left;
+	border-left:		1px solid #ccc;
+	border-top:			1px solid #ccc;
+}
+#post_menu	ul
+{
+	list-style-type:	none;
+	margin:				0;
+	padding:			0;
+}
+#post_menu	a
+{
+	text-decoration:	none;
+	padding-top:		5px;
+	display:			block;
+	width:				180px;
+	background-color:	#fff;
+}
+#post_menu	a:hover
+{
+	text-decoration:	underline;
+}
+
+/* ----------------------------- */
+#user_list 	table
+{
+	width:				505px;
+	text-align:			center;
+	border:				1px solid #ccc;
+	float:				left;
+}
+#user_list	td
+{
+	border-bottom:		1px solid #ccc;
+	padding:			5px;
+}
+#user_list	a
+{
+	text-decoration:	none;
+}
+#user_list	a:hover
+{
+	text-decoration:	underline;
+}
+
+/* ----------------------------- */
+#msg-output
+{
+	height:				300px;
+	width:				400px;
+	overflow:			auto;
+	overflow-x:			hidden;
+	border:				1px solid #ccc;
+	word-wrap:			break-word;
+}
+
+.msg-sent
+{
+	color:				blue;
+}
+
+.msg-recd
+{
+	color:				red;
+}
+
+.msg-bkgnd
+{
+	background-color:	#f0f0f0;
+	width:				390px;
+	display:			block;
+}
+
+.msg-one
+{
+	background-color: 	#fff;
+	width:				400px;
+	border:				1px solid #A5BEE4;
+	overflow:			hidden;
+	float:				left;
+}
+
+
+/* ----------------------------- */
+#msg-user-list-container
+{
+	height:				300px;
+	width:				200px;
+	border:				1px solid #ccc;
+	overflow:			auto;
+	overflow-x:			hidden;
+}
+
+
+/* ----------------------------- */
+#msg-container-priv
+{
+	height:				300px;
+	width:				900px;
+	overflow:			auto;
+	border:				1px solid #ccc;
+}
+.msg-container-one
+{
+	height:				290px;
+	width:				290px;
+	border:				1px solid #ccc;
+	float:				left;
+}
+.msg-output-priv
+{
+	height:				200px;
+	width:				250px;
+	overflow:			auto;
+	overflow-x:			hidden;
+	border:				1px solid #ccc;
+	word-wrap:			break-word;
+}

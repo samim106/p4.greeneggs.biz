@@ -1,0 +1,27 @@
+
+
+#chars-remaining
+{
+	font-family:		arial;
+	font-size:			small;
+}
+
+#output
+{
+	height:				100px;
+	width:				300px;
+	overflow:			auto;
+	overflow-x:			hidden;
+	border:				1px solid #ccc;
+	word-wrap:			break word;
+}
+
+.msg-sent
+{
+	color:				blue;
+}
+
+.msg-recd
+{
+	color:				red;
+}

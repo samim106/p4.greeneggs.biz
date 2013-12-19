@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Test</title>
+	<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+
+	<br><br>
+
+	To test, have a friend visit this page, or open the page up in a separate browser to play against yourself.
+	<br><br>
+	<input type='text' name='msg' id='msg' maxlength='144'>
+	<div id='chars-remaining'>144 characters remaining</div>
+	
+	<button id="roll">Send Msg</button><br><br>
+	<button id="roll2">Send Msg2</button><br><br>
+	<button id="roll3">Send Msg3</button><br><br>
+
+	You:<br>
+	<div class="dice" id="you"></div><br>
+
+	Opponent:
+	<div class="dice" id="opponent"></div><br>
+	
+	Chat Room 1:<br>
+	<div id="output"></div>
+	<br><br>
+	
+	Chat Room 2:<br>
+	<div id="output2"></div>
+	<br><br>
+	
+	Chat Room 3:<br>
+	<div id="output3"></div>
+
+	User List:<br>
+	<div id="occupancy"></div>
+	<div class="content-secondary">
+		<ul data-role="listview" id="userList"></ul>
+	</div>
+	
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<!-- Pubnub JS Kit -->
+<script src="http://cdn.pubnub.com/pubnub.js"></script>
+
+<script>
+// https://github.com/pubnub/pubnub-chat-channel-presence
+
+
+
+var this_player_id = new Date().getTime()
+var opponent	= $('#opponent');
+var you			= $('#you');
+var output		= $('#output');
+var output2		= $('#output2');
+var output3		= $('#output3');
+var channel		= 'messaging123';
+
+var users = [];
+var userList = $("#userList");
+
+var pubnub = PUBNUB.init({
+	publish_key: 'pub-c-133f21e4-3995-458c-9936-c1544e69c04e',
+	subscribe_key: 'sub-c-22828d84-654f-11e3-bd1e-02ee2ddab7fe',
+	uuid: 'asdf',
+});
+/*
+ pubnub.uuid(function(uuid){
+	myUUID = console.log(uuid)
+ });
+*/
+
+//---------------------------------------
+//	Subscribe to the channel
+//	This is triggered after every turn, since the turn sends a message
+//---------------------------------------
+pubnub.subscribe({
+	channel: channel,
+	//presence: function(m){console.log(m)},
+	message: function(message, uuid){
+
+		// Turn the string of JSON into an array
+		var results   = $.parseJSON(message);
+
+		// Pull the information
+		var sender_id	= results['sender_id'];
+		var receiver_id	= results['receiver_id'];
+		var msg			= results['message'];
+		
+		// Play!
+		listen(sender_id,receiver_id,msg);
+	},
+	
+	connect : connect,
+	
+	presence: function(message) {
+		console.log(message, true);
+		$('#content-secondary').append("hi");
+		userList.append(message);
+		
+	},
+	
+/*
+	presence: function(message, env, channel) { // This gets called on user leave / enter
+		if (message.action == "join") {
+			userList.append("hi");
+			//users.push(message.uuid);
+			//userList.append("<li data-username='" + message.uuid + "'>" + message.uuid + "</li>");
+		} else if (message.action == "leave") {
+			userList.append("bye");
+			//users.splice(users.indexOf(message.uuid), 1);
+			//userList.find('[data-username="' + message.uuid + '"]').remove();
+		}
+
+    userList.listview('refresh');
+	},
+*/
+});
+
+function presence(details) {
+	var uuid = 'uuid' in details && (''+details.uuid).toLowerCase();
+
+	if ('action' in details && uuid) p.events.fire(
+		'presence-user-' + details.action, uuid
+	);
+
+	// Here Now (only)
+	if ('uuids' in details) p.each( details.uuids, function(uuid) {
+		p.events.fire( 'presence-user-join', uuid.toLowerCase() );
+	} );
+
+	// Here Now (too)
+	$('#occupancy').innerHTML = 'occupancy' in details && details.occupancy || 1;
+	
+	console.log('here222');
+	console.log(details, true);
+	$('#content-secondary').append("hi");
+	userList.append(message);
+}
+
+function connect() {
+	console.log('here123');
+	pubnub.here_now({
+		channel : channel,
+		callback : function(message) {
+			console.log(message, true);
+			$('#content-secondary').append("hi");
+			userList.append(message);
+		}
+	});
+}
+
+//---------------------------------------
+//	Send a message
+//---------------------------------------
+$('#roll').click(function() {
+	send_msg(1);
+});
+$('#roll2').click(function() {
+	send_msg(2);
+});
+$('#roll3').click(function() {
+	send_msg(3);
+});
+
+//---------------------------------------
+//	Msg limit to 144 chars
+//---------------------------------------
+$('#msg').keyup( function() {
+	$('#chars-remaining').html((144 - $('#msg').val().length) + ' characters remaining');
+});
+
+//---------------------------------------
+function send_msg(r_id) {
+	// Get the message you want to send
+	var szMsg = $('#msg').val();
+	console.log("szMsg: " + szMsg);
+	// Output
+	//output.html('Message sent...<br>');
+	you.html(szMsg);
+
+	// Data of player_id and roll
+	data = { 
+		'sender_id' : this_player_id, 
+		'receiver_id' : r_id,
+		'message' : szMsg,
+		'uuid' : 'asdf'
+	}
+	
+	// Convert data to JSON string
+	var message = JSON.stringify(data);
+	
+	// Publish 
+	pubnub.publish({
+		channel: channel,
+		message: message,
+	});
+}
+
+//---------------------------------------
+function wordwrap( str ) {
+	var nConstant = 35;
+	var j = (str.length / nConstant) | 0;
+	
+	// return if you only have one line of text
+	if (j == 0) {
+		return str;
+	}
+
+	// return the string
+	return str.substring(0, nConstant) + "\n" + wordwrap(str.substring(nConstant, str.length));
+}
+
+//---------------------------------------
+function listen(sender_id, receiver_id, msg) {
+	
+	console.log("sender_id: " + sender_id);
+	console.log("this_player_id: " + this_player_id);
+	if (receiver_id == 1) {
+		// format the msg
+		msg = wordwrap(msg);
+		if (sender_id == this_player_id) {
+			msg = "<span class='msg-sent'>" + msg + "</span>";
+		} else {
+			msg = "<span class='msg-recd'>" + msg + "</span>";
+		}
+		
+		// post the msg to the chat box
+		output.append(msg + '<br>');
+		
+		// scroll to see the msg
+		output.scrollTop(output[0].scrollHeight);
+	} else if (receiver_id == 2) {
+		output2.append(msg + '<br>');
+		output2.scrollTop(output2[0].scrollHeight);
+	} else {
+		output3.append(msg + '<br>');
+		output3.scrollTop(output3[0].scrollHeight);
+	}
+}
+
+//---------------------------------------
+//---------------------------------------
+//---------------------------------------
+
+
+
+
+
+
+ //    http://www.pubnub.com/how-it-works/presence/
+
+</script>
+
+<!--
+Product	Sandbox
+Subscribe Key	 sub-c-22828d84-654f-11e3-bd1e-02ee2ddab7fe
+Publish Key	pub-c-133f21e4-3995-458c-9936-c1544e69c04e
+Secret Key	sec-c-NDdkM2JkNDEtMjIyMS00ZjI5LWE5ZTYtMTcwZjc4YTM0MWZm
+-->
+
+
+</body>
+</html>
