@@ -1,11 +1,15 @@
 <div id='article_container'>
-<?php if ($msgs==null) {
+<?php 
+/*
+	if ($msgs==null) {
 		echo "There are no messages to display.";
 	} 
+*/
 ?>
-	<h2>Global</h2>
+<!--	
 	<div id='msg_prev_container'>
 <?php 
+/*
 	$msgs = array_reverse( $msgs );
 	foreach($msgs as $msg): 
 ?>
@@ -21,8 +25,9 @@
 			</div>
 		</article>
 <?php endforeach; ?>
+*/ ?>
 	</div>
-	<br/>
+-->
 	
 	<!-- Global Chatroom -->
 	<div id='msg-container'>
@@ -33,24 +38,31 @@
 			<input type='submit' value='Send' id="send-msg">
 		</form>
 		<div id='chars-remaining'>144 characters remaining</div>
+		<br/>
+		<div id='results'></div>
 	</div>
 	
-	<!-- Private Chatroom -->
+	<!-- Private Chatroom 
 	<div id='msg-container-priv'>
 	</div>
-
-
+	-->
 </div>
+
+
+<!--
 <div id='msg-user-list-container'>
 	<h2>User List</h2>
 	<ul id='msg-user-list'>
 	<?php 
+	/*
 		foreach($users as $user):
 			print('<li name='.$user['user_id'].'>'.$user['first_name'].' '.$user['last_name'].'</li>');
 		endforeach;
+	*/
 	?>
 	</ul>
 </div>
+-->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://cdn.pubnub.com/pubnub.js"></script>
-<script type="text/javascript" src="/js/msgs.js"></script>
+

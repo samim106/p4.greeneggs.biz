@@ -204,6 +204,16 @@ body
 }
 
 /* ----------------------------- */
+#msg-container
+{
+	height:				600px;
+	width:				500px;
+	overflow:			auto;
+	float:				left;
+}
+
+
+/* ----------------------------- */
 #msg-output
 {
 	height:				300px;
@@ -239,6 +249,9 @@ body
 	overflow:			hidden;
 	float:				left;
 }
+
+
+
 
 
 /* ----------------------------- */

@@ -10,10 +10,14 @@ $(document).ready(function(){
 	var output_priv		= $('#msg-output-priv');
 	
 	var pubnub = PUBNUB.init({
-		publish_key: 'pub-c-133f21e4-3995-458c-9936-c1544e69c04e',
-		subscribe_key: 'sub-c-22828d84-654f-11e3-bd1e-02ee2ddab7fe',
+		publish_key: 	'pub-c-133f21e4-3995-458c-9936-c1544e69c04e',
+		subscribe_key:	'sub-c-22828d84-654f-11e3-bd1e-02ee2ddab7fe',
 	});
+	
+	// put the focus on the text box
+	$('#msg').focus();
 }
+
 //---------------------------------------
 //	Subscribe to the channel
 //	This is triggered after every turn, since the turn sends a message
@@ -43,19 +47,27 @@ $('#showmenu').click(function() {
 //	Message limit to 144 chars
 $('#msg').keyup( function() {
 	$('#chars-remaining').html((144 - $('#msg').val().length) + ' characters remaining');
+	
+	// clear the results box
+	$('#results').html("");
 });
 
 //---------------------------------------
 //	Send message button
 $('#send-msg').click(function() {
-	// send the message
-	send_msg(0);
-	
-	// hide the previous chats
-	$('#msg_prev_container').slideUp(); 		// !@#!@# this needs to be integrated into the chat windows stupid
-	
-	// put the focus back into the text box
-	$('#msg').focus();
+	if ($('#msg').val() == '') {
+		$('#results').html("Please input text before submitting");
+		return false;
+	} else {
+		// send the message
+		send_msg(0);
+		
+		// hide the previous chats
+		//$('#msg_prev_container').slideUp(); 		// !@#!@# this needs to be integrated into the chat windows stupid
+		
+		// put the focus back into the text box
+		$('#msg').focus();
+	}
 });
 
 
@@ -122,23 +134,6 @@ function send_msg(r_id) {
 	
 }
 
-/*
-//---------------------------------------
-//	Wrap the message
-function wordwrap( str ) {
-	var nConstant = 35;
-	var j = (str.length / nConstant) | 0;
-	
-	// return if you only have one line of text
-	if (j == 0) {
-		return str;
-	}
-
-	// return the string
-	return str.substring(0, nConstant) + "\n" + wordwrap(str.substring(nConstant, str.length));
-}
-*/
-
 //---------------------------------------
 //	Listen for messages
 function listen(sender_id, sender_fname, receiver_id, msg) {
@@ -152,9 +147,9 @@ function listen(sender_id, sender_fname, receiver_id, msg) {
 	{
 		// add color to the text depending if you're the sender or not
 		if (sender_id == gSenderID) {
-			msg = "<span class='msg-sent'>" + sender_fname + ": " + msg + "</span>";
+			msg = "<span class='msg-sent'><b>" + sender_fname + ":</b> " + msg + "</span>";
 		} else {
-			msg = "<span class='msg-recd'>" + sender_fname + ": " + msg + "</span>";
+			msg = "<span class='msg-recd'><b>" + sender_fname + ":</b> " + msg + "</span>";
 		}
 		
 		// add background to every other msg 

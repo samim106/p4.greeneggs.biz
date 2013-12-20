@@ -9,11 +9,12 @@ class msgs_controller extends base_controller {
 		}
 	}
 	
+	// -------------------------------------------------------------------------
 	public function index() {
 		# Set up the View
 		$this->template->content = View::instance('v_msgs_index');
 		$this->template->title   = "Chatroom";
-
+/*
 		# Build the query -- get the last 5 records to the global chat room
 		$q = "SELECT 
 				messages.content,
@@ -45,10 +46,11 @@ class msgs_controller extends base_controller {
 
 		// Pass data to the View
 		$this->template->content->users = $users;
-		
+*/		
 		// Load JS files
 		$client_files_body = Array(
-			"/js/jquery.form.js"
+			"/js/jquery.form.js",
+			"/js/msgs.js"
 		);
 		$this->template->client_files_body = Utils::load_client_files($client_files_body);
 		
@@ -56,7 +58,8 @@ class msgs_controller extends base_controller {
 		echo $this->template;
 	}
 	
-	// put the post into the db
+	// -------------------------------------------------------------------------
+	// put the msg into the db
 	public function p_add($receiver_id = 0) {
 		// check if there is content, if not, just go back to the same page
 		if ($_POST['content'] == null) {
@@ -68,7 +71,7 @@ class msgs_controller extends base_controller {
 		$_POST['sender_id']		= $this->user->user_id;
 		$_POST['receiver_id']	= $receiver_id;			// global chatroom = 0
 		
-		// Insert the post
+		// Insert the msg
 		DB::instance(DB_NAME)->insert('messages',$_POST);
 
 		// data to send back
@@ -78,6 +81,96 @@ class msgs_controller extends base_controller {
 		$data['receiver_id']	= $receiver_id;
 		echo json_encode($data);
 	}
+	
+	// -------------------------------------------------------------------------
+	public function view() {
+		// Set up the View
+		$this->template->content = View::instance('v_msgs_view');
+		$this->template->title   = "Chatroom";
+		
+		// Load JS files
+		$client_files_body = Array(
+			"http://cdn.pubnub.com/pubnub.js",
+			"/js/jquery.form.js",
+			//"/js/msgs.js",
+			"/js/msgs_view.js"
+		);
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
+
+		// get the last 20 msgs
+		$q = "SELECT 
+				messages.content,
+				messages.created,
+				messages.sender_id,
+				messages.receiver_id, 
+				users.first_name
+			FROM messages
+			INNER JOIN users 
+				ON messages.sender_id = users.user_id
+			WHERE messages.receiver_id=0
+			ORDER BY messages.created DESC LIMIT 20";
+
+		# Run the query
+		$msgs = DB::instance(DB_NAME)->select_rows($q);
+
+		# Pass data to the View
+		$this->template->content->msgs = $msgs;
+		$this->template->content->myID = $this->user->user_id;
+		
+		// Render the View
+		echo $this->template;
+	}
+	
+	// -------------------------------------------------------------------------
+	public function view_more() {
+		$tot_msgs = $_POST['tot_msgs'];
+
+		// data to send back
+		$data = Array();
+		
+		if (!is_numeric($tot_msgs)) {
+			$data['msg'] = "There was an error requesting your data.";
+			echo json_encode($data);
+			return;
+		}
+
+		// add 20 more to get
+		$tot_msgs = $tot_msgs + 20;
+
+		$q = "SELECT 
+				messages.content,
+				messages.created,
+				messages.sender_id,
+				messages.receiver_id, 
+				users.first_name
+			FROM messages
+			INNER JOIN users 
+				ON messages.sender_id = users.user_id
+			WHERE messages.receiver_id=0
+			ORDER BY messages.created DESC LIMIT ".$tot_msgs;
+		$msgs = DB::instance(DB_NAME)->select_rows($q);
+		$msgs = array_reverse( $msgs );
+		
+	//	$msgs['tot_msgs'] 	= $tot_msgs;
+//		$msgs['myID'] 		= $this->user->user_id;
+		echo json_encode($msgs);
+		//$data['msg'] = "Your request has been fulfilled.";
+		//echo json_encode($data);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 // -------------------------------------------------------------------------
 	/*

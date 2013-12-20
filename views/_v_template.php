@@ -40,13 +40,23 @@
 			<div id='err_msg'></div>
 		</div>
 		<?php if(isset($content)) echo $content; ?>
-		<?php if (substr("$_SERVER[REQUEST_URI]",1,5) == 'posts') { ?>
+		<?php 
+		$myURL = substr("$_SERVER[REQUEST_URI]",1,4);
+		if ( $myURL == 'post') { ?>
 		<div id='post_menu'>
 			<ul>
 				<li><b>Post Menu</b></li>
 				<li><a href='/posts/add/'>Add a Post</a></li>
 				<li><a href='/posts/edit/'>Edit/Delete Your Posts</a></li>
 				<li><a href='/posts/'>View Followed Posts</a></li>
+			</ul>
+		</div>
+		<?php } elseif ($myURL == 'msgs') { ?>
+		<div id='post_menu'>
+			<ul>
+				<li><b>Message Menu</b></li>
+				<li><a href='/msgs/'>Global Chatroom</a></li>
+				<li><a href='/msgs/view/'>View Past Msgs</a></li>
 			</ul>
 		</div>
 		<?php } ?>
