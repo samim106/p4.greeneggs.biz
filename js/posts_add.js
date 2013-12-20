@@ -13,10 +13,11 @@ var options = {
 		$('#results').html(ret['msg']);
 	},
 	error: function() {
-		err_msg.append("An error occurred while trying to update your following status...");
+		$('#err_msg').html("An error occurred while trying to update your following status...");
 	},
 	clearForm: true
 };
+
 $('form').ajaxForm(options);
 
 });

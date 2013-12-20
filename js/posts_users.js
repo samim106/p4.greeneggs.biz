@@ -19,7 +19,7 @@ $('.uf_link').click(function() {
 			$('a#'+user_id).text(new_cmd);
 		},
 		error: function() {
-			err_msg.append("An error occurred while trying to update your following status...");
+			$('#err_msg').append("An error occurred while trying to update your following status...");
 		}
 	};
 	$.ajax(options);

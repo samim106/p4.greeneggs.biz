@@ -9,12 +9,17 @@ class users_controller extends base_controller {
         Router::redirect('/');
     }
 
+	// -----------------------------------------------------------------------------------
 	// display information
-    public function signup($msg = NULL) {
+    public function signup() {
 		// set up the view
 		$this->template->content = View::instance('v_users_signup');
 		$this->template->title = "Green Eggs - Sign up";
-		$this->template->content->msg = $msg;
+		$client_files_body = Array(
+			"/js/jquery.form.js",
+			"/js/users_signup.js"
+		);
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
 		
 		// render the view
 		echo $this->template;
@@ -22,13 +27,23 @@ class users_controller extends base_controller {
 
 	// process the information
 	public function p_signup() {
+		// data to return
+		$ret = Array();
+		
 		// Confirm all fields at least have one character in them
-		// This is a sad check, but it'll suffice for now
 		if (($_POST['first_name'] == null) ||
 			($_POST['last_name'] == null) ||
 			($_POST['email'] == null) ||
 			($_POST['password'] == null)) {
-			Router::redirect('/users/signup/502');
+			$ret['msg'] = "Please fill in all fields.";
+			echo json_encode($ret);
+			return;
+		}
+		
+		// check if the email is valid
+		if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+			$ret['msg'] = "Please input a valid email address.";
+			echo json_encode($ret);
 		}
 		
 		// sanitize the data we get
@@ -44,24 +59,42 @@ class users_controller extends base_controller {
 		$q = 'SELECT email FROM users WHERE email="'.$_POST['email'].'"';
 		$bCheck = DB::instance(DB_NAME)->select_field($q);
 		if ($bCheck) {
-			// email is already in use
-			Router::redirect('/users/signup/501');
+			$ret['msg'] = "This email is already in use.";
+			echo json_encode($ret);
+			return;
 		}
 		else {
 			// insert data into db & redirect to login screen
 			DB::instance(DB_NAME)->insert_row('users', $_POST);
-			Router::redirect('/users/login');
+			
+			// log in the user
+			$q = 'SELECT token 
+				FROM users
+				WHERE email = "'.$_POST['email'].'"
+				AND password = "'.$_POST['password'].'"';
+
+			$token = DB::instance(DB_NAME)->select_field($q);
+			setcookie('token', $token, strtotime('+500 minutes'), '/');
+			
+			// send back a message
+			$ret['msg'] = "Thanks for signing up, you'll be redirected to the login page.";			
+			echo json_encode($ret);
 		}
 	}
 	
-	public function login($msg = null) {
+	// -----------------------------------------------------------------------------------
+	public function login() {
 		$this->template->content = View::instance('v_users_login');
 		$this->template->title = "Login";
-		$this->template->content->msg = $msg;
+		$client_files_body = Array(
+			"/js/jquery.form.js",
+			"/js/users_login.js"
+		);
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
     
 		echo $this->template;
 	}
-	
+
 	public function p_login() {
 		// get the password
 		$_POST['password'] 	= sha1(PASSWORD_SALT.$_POST['password']);
@@ -77,15 +110,20 @@ class users_controller extends base_controller {
 			setcookie('token', $token, strtotime('+500 minutes'), '/');
 			
 			// Redirect the user to the posts page
-			Router::redirect('/posts');
+			$ret = Array();
+			$ret['msg'] = "Thanks for signing in. You'll be warped to the posts section!";
+			echo json_encode($ret);
 		}
 		else {
-			// redirect to the login page with an error msg
-			Router::redirect('/users/login/510');
+			// send back an error message
+			$ret = Array();
+			$ret['msg'] = "Sorry, your login information is incorrect.";
+			echo json_encode($ret);
 		}
-		echo $token;
+		//echo $token;
 	}
 
+	// -----------------------------------------------------------------------------------
     public function logout() {
 		// make sure the user is logged in prior to logout
 		if(!$this->user) {
@@ -104,6 +142,7 @@ class users_controller extends base_controller {
 		Router::redirect('/');
     }
 
+	// -----------------------------------------------------------------------------------
     public function profile($user_name = NULL) {
 		// if the user isn't logged in, drop them back to the homepage
 		if (!$this->user) {

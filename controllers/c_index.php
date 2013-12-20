@@ -20,7 +20,14 @@ class index_controller extends base_controller {
 			
 		// Now set the <title> tag
 		$this->template->title = "Green Eggs Chatroom";
-
+		
+		// JS files
+		$client_files_body = Array(
+			"/js/jquery.form.js",
+			"/js/users_login.js"
+		);
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
+		
 		// Render the view
 		echo $this->template;
 

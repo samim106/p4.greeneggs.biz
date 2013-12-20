@@ -9,6 +9,46 @@ class posts_controller extends base_controller {
 		}
 	}
 	
+	// -----------------------------------------------------------------------------------
+	public function index() {
+		 # Set up the View
+		$this->template->content = View::instance('v_posts_index');
+		$this->template->title   = "Followed Posts";
+
+		# Build the query
+		$q = 'SELECT 
+				posts.content,
+				posts.created,
+				posts.user_id AS post_user_id,
+				users_users.user_id AS follower_id,
+				users.first_name,
+				users.last_name
+			FROM posts
+			INNER JOIN users_users 
+				ON posts.user_id = users_users.user_id_followed
+			INNER JOIN users 
+				ON posts.user_id = users.user_id
+			WHERE users_users.user_id = '.$this->user->user_id.' 
+			ORDER BY posts.created DESC';
+		
+		# Run the query
+		$posts = DB::instance(DB_NAME)->select_rows($q);
+		
+		// JS files
+		$client_files_body = Array(
+			"/js/jquery.form.js",
+			"/js/users_login.js"
+		);
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
+		
+		# Pass data to the View
+		$this->template->content->posts = $posts;
+
+		# Render the View
+		echo $this->template;
+	}
+
+	// -----------------------------------------------------------------------------------
 	public function add() {
 		$this->template->content = View::instance("v_posts_add");
 		$this->template->title   = "Add a Post";
@@ -41,11 +81,12 @@ class posts_controller extends base_controller {
 			$index = DB::instance(DB_NAME)->insert('posts', $_POST);
 			
 			// return the success msg
-			$return['msg'] = "Your post has been updated.";
+			$return['msg'] = "Your post has been added.";
 			echo json_encode($return);
 		}
 	}
 	
+	// -----------------------------------------------------------------------------------
 	public function view($input) {
 		$this->template->content = View::instance("v_posts_view");
 		$this->template->title   = "View a Post";
@@ -62,7 +103,8 @@ class posts_controller extends base_controller {
 
 		echo $this->template;
 	}
-		
+	
+	// -----------------------------------------------------------------------------------
 	public function edit() {
 		$this->template->content = View::instance("v_posts_edit");
 		$this->template->title   = "Edit / Delete a Post";
@@ -96,7 +138,9 @@ class posts_controller extends base_controller {
 		}
 		else if ($this->user->user_id != $post['user_id']) {
 			// Confirm that the user who posted it is editing it
-			Router::redirect('/posts/edit_one/-1');
+			$return['msg'] = "You don't own this post! Your changes were discarded.";
+			echo json_encode($return);
+			return;
 		}
 		$this->template->content->post = $post;
 		
@@ -113,13 +157,6 @@ class posts_controller extends base_controller {
 	public function p_edit_one() {
 		// data to send back
 		$return = Array();
-		
-		// make sure you're the post owner
-		if ($this->user->user_id != $_POST['post_id']) {
-			$return['msg'] = "You don't own this post! Your changes were discarded.";
-			echo json_encode($return);
-			return;
-		}
 
 		// format the data
 		$data = Array(
@@ -128,12 +165,11 @@ class posts_controller extends base_controller {
 
 		// make sure there's still content
 		if ($_POST['content'] == null) {
-			$return['msg'] = "There's no content to edit. If you want to delete a post, select that option.";
+			$return['msg'] = "There's no content to edit. If you want to delete the post, select that option.";
 			echo json_encode($return);
 			return;
 		}
-		
-		
+
 		// make sure there's something to edit
 		$ret = -1;
 		if ($_POST['post_id'] != null) {
@@ -151,6 +187,7 @@ class posts_controller extends base_controller {
 		
 	}
 	
+	// -----------------------------------------------------------------------------------
 	public function delete_one($errorMsg) {
 		$this->template->content = View::instance("v_posts_delete_one");
 		$this->template->title   = "Delete a Post";
@@ -195,42 +232,15 @@ class posts_controller extends base_controller {
 			$return['msg'] = "ERROR 110: Strange. There was nothing found to delete!";
 		}
 		else {
-			$return['msg'] = "Your post was deleted";
+			$return['msg'] = "Your post was deleted.";
 		}
 		echo json_encode($return);
 	}
 	
-	public function index() {
-		 # Set up the View
-		$this->template->content = View::instance('v_posts_index');
-		$this->template->title   = "Followed Posts";
+	// -----------------------------------------------------------------------------------
 
-		# Build the query
-		$q = 'SELECT 
-				posts.content,
-				posts.created,
-				posts.user_id AS post_user_id,
-				users_users.user_id AS follower_id,
-				users.first_name,
-				users.last_name
-			FROM posts
-			INNER JOIN users_users 
-				ON posts.user_id = users_users.user_id_followed
-			INNER JOIN users 
-				ON posts.user_id = users.user_id
-			WHERE users_users.user_id = '.$this->user->user_id.' 
-			ORDER BY posts.created DESC';
-		
-		# Run the query
-		$posts = DB::instance(DB_NAME)->select_rows($q);
-
-		# Pass data to the View
-		$this->template->content->posts = $posts;
-
-		# Render the View
-		echo $this->template;
-	}
 	
+	// -----------------------------------------------------------------------------------
 	public function users() {
 		// set up the view
 		$this->template->content = View::instance('v_posts_users');
@@ -259,6 +269,7 @@ class posts_controller extends base_controller {
 		echo $this->template;
 	}
 	
+	// -----------------------------------------------------------------------------------
 	public function follow($user_id_followed) {
 		# Prepare the data array to be inserted
 		$data = Array(
@@ -276,6 +287,7 @@ class posts_controller extends base_controller {
 		echo json_encode($data);
 	}
 
+	// -----------------------------------------------------------------------------------
 	public function unfollow($user_id_followed) {
 		# Delete this connection
 		$where_condition = 'WHERE user_id = '.$this->user->user_id.' AND user_id_followed = '.$user_id_followed;

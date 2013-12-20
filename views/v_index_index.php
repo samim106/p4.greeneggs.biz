@@ -19,8 +19,9 @@
 		password <input type="password" name="password" /> <br/>
 		<input type="submit" value="login">
 	</form>
-
-	<br><br>
+	<br>
+	<div id='results'></div>
+	<br>
 	<div id='signup_button'>
 		<a href='/users/signup'>CREATE AN ACCOUNT</a>
 	</div>
