@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-$('#results').html("Type your post in the textbox above and press the buttom above when done.");
+$('#results').html("Type your post in the textbox above and press the button above when done.");
 
 var options = {
 	type: 	'POST',

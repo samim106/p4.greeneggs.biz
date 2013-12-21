@@ -20,9 +20,8 @@
 			<!-- Menu for users who are logged in -->
 			<?php if($user): ?>
 				Hi <?=$user->first_name; ?>!&nbsp;&nbsp;
-				<a href='/msgs/'>Messages</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+				<a href='/msgs/'>Chatroom</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 				<a href='/posts/'>Posts</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-				<a href='/posts/users/'>Users</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 				<a href='/users/profile'>Profile</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 				<a href='/users/logout'>Logout</a>&nbsp;&nbsp;
 			<!-- Menu options for users who are not logged in -->
