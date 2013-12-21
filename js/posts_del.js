@@ -19,7 +19,7 @@ $(document).ready(function(){
 			$('form').hide();
 		},
 		error: function() {
-			$('#err_msg').append("An error occurred while trying to delete your post...");
+			$('#err_msg').html("An error occurred while trying to delete your post...");
 		}
 	};
 	$('form').ajaxForm(options);

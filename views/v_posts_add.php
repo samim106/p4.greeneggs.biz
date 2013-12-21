@@ -4,7 +4,7 @@
 		<br/>
 		<input type='submit' value='add new post'>
 	</form>
-	<br><br>
+	<br>
 	<div id='results'></div>
 </div>
 

@@ -15,7 +15,7 @@ $(document).ready(function(){
 			$('#results').html(ret['msg']);
 		},
 		error: function() {
-			err_msg.append("An error occurred while trying to update your post...");
+			err_msg.html("An error occurred while trying to update your post...");
 		}
 	};
 	$('form').ajaxForm(options);

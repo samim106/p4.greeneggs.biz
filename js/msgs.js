@@ -126,7 +126,7 @@ function send_msg(r_id) {
 			$('#chars-remaining').html('144 characters remaining');
 		},
 		error: function() {
-			err_msg.append("An error occurred while trying to send your message...");
+			err_msg.html("An error occurred while trying to send your message...");
 		},
 		clearForm: true
 	};
