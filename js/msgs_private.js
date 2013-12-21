@@ -85,12 +85,12 @@ $('#send-msg').click(function() {
 $('#send-msg-priv').click(function() {
 	// get the receiver id
 	var r_id	= $(this).attr('r_id');
-	console.log("r_id: " + r_id);
+	//console.log("r_id: " + r_id);
 	
 	// send the message
 	send_msg(r_id);
 	
-	console.log('here!!!!');
+	//console.log('here!!!!');
 });
 
 //---------------------------------------
@@ -115,20 +115,20 @@ $('#msg-container-priv').on("submit", function(e) {
 function send_msg(r_id) {
  	// Get the message you want to send
 	szMsg = $('#msg-priv-'+r_id).val();
-	console.log("szMsg: " + szMsg);		// !@#!@#
+	//console.log("szMsg: " + szMsg);		// !@#!@#
 	var myURL = '/msgs_private/p_add_one/'+r_id;
 	
-	console.log("erwerwerwerwer");
+	//console.log("erwerwerwerwer");
 	// set up the options for ajax
 	var options = {
 		type: 'POST',
 		url: '/msgs_private/p_add_one/'+r_id,
-		beforeSubmit: console.log("beforesumbit"),
+		// beforeSubmit: console.log("beforesumbit"),
 		success: function(response) {
 			var ret = $.parseJSON(response);
 			var sender_fname	= ret['sender_fname'];
 			gSenderID 			= ret['sender_id'];
-			console.log('gSenderID1: ' + gSenderID);
+			//console.log('gSenderID1: ' + gSenderID);
 
 			// Data of player_id and roll
 			data = { 
@@ -163,10 +163,10 @@ function send_msg(r_id) {
 //	Listen for messages
 function listen(sender_id, sender_fname, receiver_id, msg) {
 	
-	console.log("gSenderID: " + gSenderID);
-	console.log("sender_id: " + sender_id);
-	console.log("sender_fn: " + sender_fname);
-	console.log("receiver_id: " + receiver_id);
+	//console.log("gSenderID: " + gSenderID);
+	//console.log("sender_id: " + sender_id);
+	//console.log("sender_fn: " + sender_fname);
+	//console.log("receiver_id: " + receiver_id);
 
 	// format the msg
 	{

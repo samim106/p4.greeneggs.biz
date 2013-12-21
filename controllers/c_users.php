@@ -29,6 +29,7 @@ class users_controller extends base_controller {
 	public function p_signup() {
 		// data to return
 		$ret = Array();
+		$ret['cmd'] = -1;
 		
 		// Confirm all fields at least have one character in them
 		if (($_POST['first_name'] == null) ||
@@ -44,6 +45,7 @@ class users_controller extends base_controller {
 		if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 			$ret['msg'] = "Please input a valid email address.";
 			echo json_encode($ret);
+			return;
 		}
 		
 		// sanitize the data we get
@@ -77,6 +79,7 @@ class users_controller extends base_controller {
 			setcookie('token', $token, strtotime('+500 minutes'), '/');
 			
 			// send back a message
+			$ret['cmd'] = 0;
 			$ret['msg'] = "Thanks for signing up, you'll be redirected to the login page.";			
 			echo json_encode($ret);
 		}
@@ -84,18 +87,14 @@ class users_controller extends base_controller {
 	
 	// -----------------------------------------------------------------------------------
 	public function login() {
-		$this->template->content = View::instance('v_users_login');
-		$this->template->title = "Login";
-		$client_files_body = Array(
-			"/js/jquery.form.js",
-			"/js/users_login.js"
-		);
-		$this->template->client_files_body = Utils::load_client_files($client_files_body);
-    
-		echo $this->template;
+		Router::redirect('/');
 	}
 
 	public function p_login() {
+		// data to send back
+		$ret = Array();
+		$ret['cmd'] = -1;
+		
 		// get the password
 		$_POST['password'] 	= sha1(PASSWORD_SALT.$_POST['password']);
 		
@@ -108,15 +107,14 @@ class users_controller extends base_controller {
 		
 		if ($token) {
 			setcookie('token', $token, strtotime('+500 minutes'), '/');
-			
-			// Redirect the user to the posts page
-			$ret = Array();
+
+			// return success message
+			$ret['cmd'] = 0;
 			$ret['msg'] = "Thanks for signing in. You'll be warped to the posts section!";
 			echo json_encode($ret);
 		}
 		else {
 			// send back an error message
-			$ret = Array();
 			$ret['msg'] = "Sorry, your login information is incorrect.";
 			echo json_encode($ret);
 		}

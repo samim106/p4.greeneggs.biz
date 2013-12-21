@@ -49,6 +49,7 @@
 				<li><a href='/posts/add/'>Add a Post</a></li>
 				<li><a href='/posts/edit/'>Edit/Delete Your Posts</a></li>
 				<li><a href='/posts/'>View Followed Posts</a></li>
+				<li><a href='/posts/users/'>Follow/Unfollow Users</a></li>
 			</ul>
 		</div>
 		<?php } elseif ($myURL == 'msgs') { ?>

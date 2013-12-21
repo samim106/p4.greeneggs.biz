@@ -1,4 +1,4 @@
-<table>
+<table id='profile'>
 	<tr>
 		<td>First Name</td>
 		<td><?=$user->first_name;?></td>

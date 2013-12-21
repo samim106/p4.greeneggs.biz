@@ -2,24 +2,26 @@ $(document).ready(function(){
 
 //---------------------------------------
 //	Sign up
-{
+
 	var options = {
 		type: 	'POST',
 		url: 	'/users/p_signup',
+		beforeSubmit: function() { $('#results').html("Retrieving the messages...") },
 		success: function(response) {
 			var ret = $.parseJSON(response);
-			console.log("ret: " + ret['msg']);
-			var msg = ret['msg'];
+
 			// set the text for the login if incorrect
-			$('#results').text(ret['msg']);
+			$('#results').html(ret['msg']);
 			
-			window.setTimeout(function() { window.location.href = '/posts/'; }, 2000);
+			if (ret['cmd'] >= 0) {
+				window.setTimeout(function() { window.location.href = '/posts/'; }, 2000);
+			}
 		},
 		error: function() {
-			$('#err_msg').append("An error occurred while trying to log in...");
+			$('#err_msg').html("An error occurred while trying to log in...");
 		}
 	};
 	$('form').ajaxForm(options);
-}
+
 
 });

@@ -181,6 +181,16 @@ body
 	text-decoration:	underline;
 }
 
+
+/* ----------------------------- */
+#profile	td
+{
+	border:				1px solid #ccc;
+	width:				300px;
+	padding:			5px;
+}
+
+
 /* ----------------------------- */
 #user_list 	table
 {
@@ -201,6 +211,12 @@ body
 #user_list	a:hover
 {
 	text-decoration:	underline;
+}
+
+/* ----------------------------- */
+#results
+{
+	color:				red;
 }
 
 /* ----------------------------- */

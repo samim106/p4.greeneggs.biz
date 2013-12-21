@@ -76,12 +76,12 @@ $('#send-msg').click(function() {
 $('#send-msg-priv').click(function() {
 	// get the receiver id
 	var r_id	= $(this).attr('r_id');
-	console.log("r_id: " + r_id);
+	//console.log("r_id: " + r_id);
 	
 	// send the message
 	send_msg(r_id);
 	
-	console.log('here!!!!');
+	//console.log('here!!!!');
 });
 
 
@@ -93,7 +93,7 @@ function send_msg(r_id) {
 	if (r_id != 0) {
 		szMsg = $('#msg-priv-'+r_id).val();
 	}
-	console.log("szMsg: " + szMsg);		// !@#!@#
+	//console.log("szMsg: " + szMsg);		// !@#!@#
 
 	// set up the options for ajax
 	var options = {
@@ -103,7 +103,7 @@ function send_msg(r_id) {
 			var ret = $.parseJSON(response);
 			var sender_fname	= ret['sender_fname'];
 			gSenderID 			= ret['sender_id'];
-			console.log('gSenderID1: ' + gSenderID);
+			//console.log('gSenderID1: ' + gSenderID);
 
 			// Data of player_id and roll
 			data = { 
@@ -137,11 +137,10 @@ function send_msg(r_id) {
 //---------------------------------------
 //	Listen for messages
 function listen(sender_id, sender_fname, receiver_id, msg) {
-	
-	console.log("gSenderID: " + gSenderID);
-	console.log("sender_id: " + sender_id);
-	console.log("sender_fn: " + sender_fname);
-	console.log("receiver_id: " + receiver_id);
+	//console.log("gSenderID: " + gSenderID);
+	//console.log("sender_id: " + sender_id);
+	//console.log("sender_fn: " + sender_fname);
+	//console.log("receiver_id: " + receiver_id);
 
 	// format the msg
 	{
@@ -211,7 +210,7 @@ $('#msg-user-list li').click(function() {
 	// open the chat window for that ID
 	var myStr = '#msg-output-priv-' + r_id;
 	var myPrivDiv = $(myStr);
-	console.log("myprivdiv: " + myPrivDiv);
+	//console.log("myprivdiv: " + myPrivDiv);
 	
 	// check to see if the div exists
 	if ($('#msg-output-priv-'+r_id).length == 0) {
